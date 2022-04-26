@@ -5,8 +5,8 @@ tools {nodejs "nodejs"}
         stage('Build') { 
             steps {
                 echo 'Building'
-                sh 'npm install'
-                sh 'npm run build'
+                npm install
+                npm run build
             }
         }
         stage('Test') { 
