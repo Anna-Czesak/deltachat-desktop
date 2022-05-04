@@ -26,23 +26,7 @@ tools {nodejs "nodejs"}
                 sh 'npm run test'
             }
         }
-        post {
-        failure {
-            emailext attachLog: true,
-                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-                recipientProviders: [developers(), requestor()],
-                to: 'czeslave@gmail.com',
-                subject: "Test failed in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
-        }
-        success {
-            emailext attachLog: true,
-                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-                recipientProviders: [developers(), requestor()],
-                to: 'czeslave@gmail.com',
-                subject: "Successful test in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
-        }
-    }
-    
+        
         stage('Deploy') { 
             steps {
                 echo 'Deploying'
