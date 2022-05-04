@@ -31,7 +31,7 @@ tools {nodejs "nodejs"}
             steps {
                 echo 'Deploying'
                 sh 'docker-compose  up -d build-agent'
-                
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 sh 'docker images'
                 sh 'docker tag build-agent:latest annaczesak/jenkins'
                 sh 'docker push annaczesak/jenkins'
