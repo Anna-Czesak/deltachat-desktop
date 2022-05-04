@@ -26,27 +26,48 @@ tools {nodejs "nodejs"}
                 sh 'npm run test'
             }
         }
-        stage('Deploy') { 
-            steps {
-                echo 'Deploying'
-            }
-        }
-    }
-
-    post {
+        post {
         failure {
             emailext attachLog: true,
                 body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
                 recipientProviders: [developers(), requestor()],
                 to: 'czeslave@gmail.com',
-                subject: "Build failed in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+                subject: "Test failed in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
         }
         success {
             emailext attachLog: true,
                 body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
                 recipientProviders: [developers(), requestor()],
                 to: 'czeslave@gmail.com',
-                subject: "Successful build in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+                subject: "Successful test in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+        }
+    }
+    
+        stage('Deploy') { 
+            steps {
+                echo 'Deploying'
+                sh 'docker-compose  up -d build-agent'
+                
+                sh 'docker images'
+                sh 'docker tag build-agent:latest annaczesak/jenkins'
+                sh 'docker push annaczesak/jenkins'
+            }
+        }
+    }
+    post {
+        failure {
+            emailext attachLog: true,
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                recipientProviders: [developers(), requestor()],
+                to: 'czeslave@gmail.com',
+                subject: "Deploy failed in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+        }
+        success {
+            emailext attachLog: true,
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                recipientProviders: [developers(), requestor()],
+                to: 'czeslave@gmail.com',
+                subject: "Deploy build in Jenkins ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
         }
     }
     
