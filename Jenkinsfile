@@ -31,7 +31,7 @@ tools {nodejs "nodejs"}
             steps {
                 echo 'Deploying'
                 sh 'docker build -t delta-chat -f Dockerfile-deploy .'
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --p-stdin'
                 sh 'docker images'
                 sh 'docker tag delta-chat:latest annaczesak/jenkins'
                 sh 'docker push annaczesak/jenkins'
